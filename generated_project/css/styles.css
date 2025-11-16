@@ -1,0 +1,648 @@
+/*
+ * styles.css – Global reset, typography, layout, components, and utilities
+ * ---------------------------------------------------------------
+ * This stylesheet provides a complete CSS foundation for the portfolio
+ * site defined in index.html. It includes:
+ *   • A modern CSS reset
+ *   • CSS custom properties (variables) for colours, spacing, and font‑sizes
+ *   • Base typography and colour scheme
+ *   • Sticky header with background transition on scroll
+ *   • Responsive grid layout for sections (desktop, tablet, mobile)
+ *   • Hero banner with full‑screen background, overlay, centred text and CTA
+ *   • About section layout (image + bio) with responsive stacking
+ *   • Skill items (icon grid or progress bar) with animated width
+ *   • Project cards with hover effects, overlay description and entry animation
+ *   • Contact form styling with focus, error states and accessibility helpers
+ *   • Mobile hamburger menu and navigation drawer
+ *   • Accessibility: focus outlines, high‑contrast variables, reduced‑motion support
+ */
+
+/* --------------------------------------------------------------------------
+   1. CSS Reset (modern normalize) – removes default margins/paddings and
+   ensures a consistent baseline across browsers.
+   -------------------------------------------------------------------------- */
+
+/* Box sizing rules */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove default list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* Remove default button styles */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Anchor reset */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Image responsive */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Remove default form element styling */
+input, textarea, select, button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Set core root defaults */
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-family: var(--font-family-sans, system-ui, sans-serif);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-base);
+}
+
+/* --------------------------------------------------------------------------
+   2. CSS Custom Properties (Variables)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Colour palette – high‑contrast for accessibility */
+  --color-primary: #0066ff;          /* main brand colour */
+  --color-primary-dark: #004bbb;    /* for hover states */
+  --color-secondary: #ff6600;        /* accent colour */
+  --color-bg: #ffffff;               /* page background */
+  --color-bg-dark: #f4f4f4;          /* alternative background */
+  --color-text: #222222;            /* primary text colour */
+  --color-muted: #666666;           /* secondary/placeholder text */
+  --color-border: #e0e0e0;          /* subtle borders */
+  --color-success: #28a745;         /* form success */
+  --color-error: #dc3545;           /* form error */
+
+  /* Font families */
+  --font-family-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family-mono: "SF Mono", "Courier New", monospace;
+
+  /* Font sizes – using a modular scale */
+  --font-size-base: 1rem;            /* 16px */
+  --font-size-sm: 0.875rem;         /* 14px */
+  --font-size-lg: 1.125rem;         /* 18px */
+  --font-size-xl: 1.5rem;           /* 24px */
+  --font-size-xxl: 2rem;            /* 32px */
+
+  /* Line height */
+  --line-height-base: 1.6;
+  --line-height-heading: 1.2;
+
+  /* Spacing */
+  --spacing-xxs: 0.25rem;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Transition defaults */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.4s ease;
+  --transition-slow: 0.6s ease;
+}
+
+/* Dark mode fallback – users can add "data-theme='dark'" on <html> */
+html[data-theme='dark'] {
+  --color-bg: #111111;
+  --color-text: #eeeeee;
+  --color-muted: #bbbbbb;
+  --color-border: #333333;
+}
+
+/* --------------------------------------------------------------------------
+   3. Base Typography
+   -------------------------------------------------------------------------- */
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: var(--line-height-heading);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary);
+}
+
+h1 { font-size: var(--font-size-xxl); }
+h2 { font-size: var(--font-size-xl); }
+h3 { font-size: var(--font-size-lg); }
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+small, .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+/* Utility classes */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. Layout – Header, Main, Footer
+   -------------------------------------------------------------------------- */
+
+header.sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: var(--color-bg);
+  z-index: 1000;
+  transition: background var(--transition-medium);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* When scrolled, JS will add .scrolled to header */
+header.sticky.scrolled {
+  background: var(--color-bg-dark);
+}
+
+/* Primary navigation flex layout */
+.primary-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.nav-list {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.nav-list a {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.nav-list a:hover,
+.nav-list a:focus {
+  background: var(--color-primary);
+  color: #fff;
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. Hamburger menu (mobile) – hidden on desktop, visible on <768px
+   -------------------------------------------------------------------------- */
+
+.hamburger {
+  display: none; /* hidden by default – shown via media query */
+  width: 30px;
+  height: 24px;
+  position: relative;
+}
+
+/* Simple hamburger lines – using pseudo‑elements */
+.hamburger-box {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+  background-color: var(--color-text);
+  width: 100%;
+  height: 3px;
+  border-radius: var(--radius-sm);
+  position: absolute;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.hamburger-inner {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hamburger-inner::before {
+  content: '';
+  top: -10px;
+}
+
+.hamburger-inner::after {
+  content: '';
+  top: 10px;
+}
+
+/* When menu is open – .open class added to .hamburger */
+.hamburger.open .hamburger-inner {
+  background-color: transparent;
+}
+
+.hamburger.open .hamburger-inner::before {
+  transform: translateY(10px) rotate(45deg);
+}
+
+.hamburger.open .hamburger-inner::after {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+/* Navigation drawer – hidden on mobile until .open */
+@media (max-width: 767px) {
+  .hamburger {
+    display: block;
+  }
+  .nav-list {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 250px;
+    background: var(--color-bg);
+    flex-direction: column;
+    padding-top: var(--spacing-xl);
+    gap: var(--spacing-lg);
+    transition: right var(--transition-medium);
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    z-index: 999;
+  }
+  .nav-list.open {
+    right: 0;
+  }
+  .nav-list a {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Sections – generic spacing and responsive grid container
+   -------------------------------------------------------------------------- */
+
+.section {
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+  background: var(--color-primary) url('../images/hero-bg.jpg') center/cover no-repeat;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5); /* overlay */
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: var(--spacing-lg);
+}
+
+.hero h1 {
+  font-size: var(--font-size-xxl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.hero .tagline {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.cta-button {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-secondary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.cta-button:hover,
+.cta-button:focus {
+  background: var(--color-secondary);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* About Section – image + bio */
+.about {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.profile-picture {
+  margin: 0 auto;
+  max-width: 250px;
+}
+
+.profile-picture img {
+  border-radius: 50%;
+  border: 4px solid var(--color-primary);
+}
+
+.bio {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+}
+
+/* Grid adjustments – responsive */
+@media (min-width: 768px) {
+  .about {
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+  }
+}
+
+/* Skills Section */
+.skills-container {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.skill-item {
+  background: var(--color-bg-dark);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-name {
+  display: block;
+  margin-top: var(--spacing-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Example progress bar – inner element .skill-bar */
+.skill-item .skill-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: var(--color-primary);
+  width: 0%;
+  transition: width var(--transition-medium);
+}
+
+/* When JS adds .active to .skill-item, animate */
+.skill-item.active .skill-bar {
+  width: var(--skill-level, 80%); /* fallback */
+}
+
+/* Projects Section – grid of cards */
+.projects-grid {
+  display: grid;
+  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.project-card {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: fadeInUp var(--transition-slow) forwards;
+}
+
+/* Staggered animation – JS can set --animation-delay */
+.project-card {
+  animation-delay: var(--animation-delay, 0s);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.project-card h3 {
+  margin: var(--spacing-sm) var(--spacing-md) 0;
+  font-size: var(--font-size-lg);
+}
+
+.project-card .project-description {
+  margin: var(--spacing-xs) var(--spacing-md);
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+}
+
+.project-card .project-links {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+}
+
+.project-card .project-links a {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  transition: background var(--transition-fast);
+}
+
+.project-card .project-links a:hover,
+.project-card .project-links a:focus {
+  background: var(--color-primary-dark);
+  outline: none;
+}
+
+/* Hover overlay – optional description overlay */
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.project-card:hover::after,
+.project-card:focus-within::after {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   7. Contact Form
+   -------------------------------------------------------------------------- */
+
+.contact .form-group {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.contact label {
+  margin-bottom: var(--spacing-xs);
+  font-weight: 600;
+}
+
+.contact input,
+.contact textarea {
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.contact input:focus,
+.contact textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0,102,255,0.2);
+  outline: none;
+}
+
+.contact .error {
+  border-color: var(--color-error);
+  background: rgba(220,53,69,0.05);
+}
+
+.contact .error-message {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xxs);
+}
+
+.submit-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.submit-button:hover,
+.submit-button:focus {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   8. Footer
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background: var(--color-bg-dark);
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* --------------------------------------------------------------------------
+   9. Utility & State Classes
+   -------------------------------------------------------------------------- */
+
+.active {
+  /* generic active state – can be used by JS */
+}
+
+.open {
+  /* generic open state – used for menus */
+}
+
+.error {
+  /* generic error styling – already defined for form fields */
+}
+
+/* Focus outline – ensure visible for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   10. Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Tablet (768px – 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .primary-nav {
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+  .hero h1 { font-size: var(--font-size-xl); }
+  .hero .tagline { font-size: var(--font-size-lg); }
+}
+
+/* Desktop (≥1024px) – already default, but we can add extra spacing */
+@media (min-width: 1024px) {
+  .section {
+    padding: var(--spacing-xxl) var(--spacing-lg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11. Reduced Motion – respect user preferences
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
