@@ -35,4 +35,3 @@ Now that we are done with all the set-up & installation steps we can start the a
 ### 🧪 Example Prompts
 - Create a to-do list application using html, css, and javascript.
 - Create a simple calculator web application.
-- Create a simple blog API in FastAPI with a SQLite database.
